@@ -1,0 +1,59 @@
+version: "3.4"
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    networks: [ backend ]
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    volumes:
+      - postgres_gpe:/var/lib/postgresql/data
+
+  go:
+    build:
+      context: .
+    environment:
+      - GIN_MODE=${GIN_MODE}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+    networks: [ backend ]
+    volumes:
+      - ./log:/log
+    depends_on:
+      - postgres
+    links:
+      - postgres
+    ports:
+      - "8080:8080"
+    restart: always
+
+  migrate:
+    image: migrate/migrate
+    networks: [ backend ]
+    volumes:
+      - ./internal/app/adapter/postgresql/migrations:/migrations
+    command: [ "-path", "/migrations", "-database",  "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DATABASE}?sslmode=disable", "up" ]
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./api/swagger.json:/foo/swagger.json
+    environment:
+      SWAGGER_JSON: /foo/swagger.json
+
+networks:
+  backend:
+
+volumes:
+  postgres_gpe:

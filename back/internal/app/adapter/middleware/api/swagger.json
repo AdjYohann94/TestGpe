@@ -1,0 +1,107 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "GPE Backend contract interface TESTING",
+    "description": "This document provides an exhaustive list of all endpoints available on gpe backend.",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/test": {
+      "post": {
+        "operationId": "test",
+        "tags": [
+          "Test"
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "Test input body",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/input.test"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "output.message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "details"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "input.test": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "name",
+            "example": "name",
+            "pattern": "^\\w+$",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "description": "email of user",
+            "example": "john@doe.com",
+            "format": "email",
+            "pattern": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+          }
+        },
+        "required": [
+          "name",
+          "email"
+        ]
+      }
+    }
+  }
+}

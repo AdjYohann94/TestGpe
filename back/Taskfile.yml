@@ -1,0 +1,46 @@
+version: 3
+
+tasks:
+  run:
+    desc: Run go application.
+    cmds:
+      - go run cmd/app/main.go
+
+  logs:
+    cmds:
+      - tail -f log/debug.log
+
+  build-binary:
+    desc: Build the go binary.
+    cmds:
+      - go build -v cmd/app/main.go
+
+  build-image:
+    desc: Build the image.
+    cmds:
+      - docker build .
+
+  test:
+    desc: Run all the go tests.
+    cmds:
+      - go clean -testcache
+      - go test -race ./...
+
+  lint:
+    desc: Run all linters on code.
+    cmds:
+      - go vet ./...
+
+  clean:
+    desc: Remove binary build, clean test cache
+    cmds:
+      - go clean -testcache
+      - rm -f main
+
+  seed:
+    desc: Doc seeder
+    ignore_error: true
+    silent: true
+    cmds:
+      - go run cmd/cli/seed.go --help
+      - echo -e "\nUsage go run /cmd/cli/seed.go --seed seedname\n"

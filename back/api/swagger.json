@@ -1,0 +1,1945 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "GPE Backend contract interface",
+    "description": "This document provides an exhaustive list of all endpoints available on gpe backend.",
+    "version": "0.1.1"
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": ""
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Running local dev server"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Authentication routes to register, login and refresh tokens",
+      "name": "Authentication"
+    },
+    {
+      "description": "Daily barometers for users",
+      "name": "Barometer"
+    },
+    {
+      "description": "User account information",
+      "name": "User"
+    },
+    {
+      "description": "Quizzes and responses",
+      "name": "Quiz"
+    },
+    {
+      "description": "Notifications",
+      "name": "Notification"
+    },
+    {
+      "description": "Referential information",
+      "name": "Referential"
+    },
+    {
+      "description": "System",
+      "name": "System"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "operationId": "register",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "Register a new user in the application",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/input.register"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "login",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Login success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.login.success"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "Login user and retrieve access and refresh authentication tokens",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/input.login"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "operationId": "refresh",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Refresh token success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.refresh.success"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "Generate a new access token from the refresh token. The refresh token must be valid and not expired.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/refreshToken"
+          }
+        ]
+      }
+    },
+    "/me": {
+      "get": {
+        "operationId": "getMe",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "User account information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.me"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieve user information",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ]
+      },
+      "put": {
+        "operationId": "updateUser",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "200": {
+            "description": "User account information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.me"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "Update user information",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/input.updateUser"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/quiz": {
+      "get": {
+        "operationId": "retrieveQuizzes",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "All available quizzes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.quizzes.light"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieve all available quizzes, quiz contains questions but not responses. Admin will see all quizzes but member role can only see quizzes for his work category and with qui status published or closed.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createNewQuiz",
+        "tags": [
+          "Quiz"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quiz created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.quiz"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Create a new quiz entry, with work categories associated and questions. The default status is draft",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/input.quiz"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/quiz/stats": {
+      "get": {
+        "operationId": "retrieveQuizzesStats",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "All quizzes statistics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.quizzes.stats"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Retrieve all quizzes statistics",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ]
+      }
+    },
+    "/quiz/{id}": {
+      "get": {
+        "operationId": "retrieveQuizById",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "The quiz",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.quiz"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieve a quiz by his id, the quiz contains responses for the connected user only. If the user is an admin, he can retrieve details of all quizzes, but if the user is role member, he cannot access quizzes where his work category is not in quiz work category target.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteQuizById",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "204": {
+            "description": "Resource successfully deleted"
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Delete a quiz by id, this will soft delete the quiz, questions and responses are kept",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      }
+    },
+    "/quiz/{id}/stats": {
+      "get": {
+        "operationId": "retrieveQuizStatsById",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "The quiz stats",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.quiz.stats"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Retrieve quiz statistics",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      }
+    },
+    "/quiz/{id}/response": {
+      "get": {
+        "operationId": "retrieveQuizByIdWithAllResponses",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "The quiz with all responses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.quiz"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Retrieve a quiz by his id, the quiz contains responses for all users.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      },
+      "post": {
+        "operationId": "answerQuiz",
+        "tags": [
+          "Quiz"
+        ],
+        "description": "Answer to a quiz, only published quizzes",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/input.quiz.responses"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "questions answered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.responses"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      }
+    },
+    "/question/{id}/response": {
+      "get": {
+        "operationId": "retrieveAllResponsesOfQuestion",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "All the responses of this question",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.question"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Retrieve response by his id, the questions contains responses for all users.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      }
+    },
+    "/work-category": {
+      "get": {
+        "operationId": "retrieveWorkCategories",
+        "tags": [
+          "Referential"
+        ],
+        "responses": {
+          "200": {
+            "description": "Work category referential",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.work.categories"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieve work category referential"
+      }
+    },
+    "/quiz/{id}/publish": {
+      "post": {
+        "operationId": "publishQuiz",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "published quiz",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Publish the quiz to be available to work categories associated",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      }
+    },
+    "/quiz/{id}/close": {
+      "post": {
+        "operationId": "closeQuiz",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "quiz closed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Close a quiz to not receive responses anymore",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/id"
+          }
+        ]
+      }
+    },
+    "/barometer": {
+      "post": {
+        "operationId": "defineDailyBarometer",
+        "tags": [
+          "Barometer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Barometer defined",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.barometer"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable entity, some validations failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.message"
+                }
+              }
+            }
+          }
+        },
+        "description": "Define the daily barometer for the current user. On barometer per day and barometer type. Score is the barometer evaluation. Post again barometer to update the daily value.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/input.barometer"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ]
+      },
+      "get": {
+        "operationId": "retrieveDailyBarometer",
+        "tags": [
+          "Barometer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Barometers defined for current user for today",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.barometers"
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns all barometers defined for the current user at this day.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ]
+      }
+    },
+    "/barometer/stats": {
+      "get": {
+        "operationId": "retrieveBarometerStats",
+        "tags": [
+          "Barometer"
+        ],
+        "responses": {
+          "200": {
+            "description": "Barometers stats for specified period and scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.barometer.stats"
+                }
+              }
+            }
+          }
+        },
+        "description": "[ADMIN] Returns all barometers stats, admin only.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "name": "scopeCategories",
+            "in": "query",
+            "description": "Get stats scoped by work categories",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "boolean",
+              "example": false,
+              "default": false
+            }
+          },
+          {
+            "name": "timeScope",
+            "in": "query",
+            "description": "Get stats grouped by time range period",
+            "required": false,
+            "allowEmptyValue": false,
+            "schema": {
+              "type": "string",
+              "example": "year",
+              "default": "year",
+              "enum": [
+                "year",
+                "month",
+                "day"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/notification": {
+      "get": {
+        "operationId": "getUnreadNotifications",
+        "tags": [
+          "Notification"
+        ],
+        "responses": {
+          "200": {
+            "description": "Unread notifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.notifications"
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns all unread notifications for the current user.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/filter.id"
+          },
+          {
+            "$ref": "#/components/parameters/filter.createdAtBefore"
+          },
+          {
+            "$ref": "#/components/parameters/filter.createdAtAfter"
+          },
+          {
+            "$ref": "#/components/parameters/filter.updatedAtBefore"
+          },
+          {
+            "$ref": "#/components/parameters/filter.updatedAtAfter"
+          }
+        ]
+      }
+    },
+    "/notification/archive": {
+      "get": {
+        "operationId": "getNotifications",
+        "tags": [
+          "Notification"
+        ],
+        "responses": {
+          "200": {
+            "description": "All user notifications",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/output.notifications"
+                }
+              }
+            }
+          }
+        },
+        "description": "Returns all notifications for the current user.",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          },
+          {
+            "$ref": "#/components/parameters/filter.id"
+          },
+          {
+            "$ref": "#/components/parameters/filter.createdAtBefore"
+          },
+          {
+            "$ref": "#/components/parameters/filter.createdAtAfter"
+          },
+          {
+            "$ref": "#/components/parameters/filter.updatedAtBefore"
+          },
+          {
+            "$ref": "#/components/parameters/filter.updatedAtAfter"
+          }
+        ]
+      }
+    },
+    "/notification/read": {
+      "post": {
+        "operationId": "setAllNotificationReadForCurrentUser",
+        "tags": [
+          "Notification"
+        ],
+        "responses": {
+          "204": {
+            "description": "Notifications reads"
+          }
+        },
+        "description": "Set all current user notification to status read",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/accessToken"
+          }
+        ]
+      }
+    },
+    "/ping": {
+      "get": {
+        "operationId": "pingWebService",
+        "tags": [
+          "System"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ping webservices to ensure is up"
+          }
+        },
+        "description": "Ping webservices to ensure is up"
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "refreshToken": {
+        "name": "X-Refresh-Token",
+        "in": "header",
+        "description": "The refresh token",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "accessToken": {
+        "name": "X-Access-Token",
+        "in": "header",
+        "description": "The access token",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "id": {
+        "name": "id",
+        "in": "path",
+        "description": "The resource identifier",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "example": 1,
+          "minimum": 1
+        }
+      },
+      "filter.id": {
+        "name": "id[]",
+        "in": "query",
+        "description": "Resource identifiers",
+        "required": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 1
+          }
+        },
+        "explode": true
+      },
+      "filter.createdAtBefore": {
+        "name": "createdAt[before]",
+        "in": "query",
+        "description": "Created at before the provided date",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "filter.createdAtAfter": {
+        "name": "createdAt[after]",
+        "in": "query",
+        "description": "Created after the provided date",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "filter.updatedAtBefore": {
+        "name": "updatedAt[before]",
+        "in": "query",
+        "description": "Updated at before the provided date",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "filter.updatedAtAfter": {
+        "name": "updatedAt[after]",
+        "in": "query",
+        "description": "Updated after the provided date",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "schemas": {
+      "input.register": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "firstName of user",
+            "example": "johnUser",
+            "pattern": "^\\w+$",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "lastName": {
+            "type": "string",
+            "description": "lastName of user",
+            "example": "doeName",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "description": "email of user",
+            "example": "john@doe.com",
+            "format": "email",
+            "pattern": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+          },
+          "password": {
+            "type": "string",
+            "description": "password of user",
+            "example": "password",
+            "minLength": 8,
+            "maxLength": 100
+          },
+          "workCategoryId": {
+            "type": "integer",
+            "description": "The user work category id reference",
+            "example": 1,
+            "minimum": 1
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email",
+          "password",
+          "workCategoryId"
+        ]
+      },
+      "input.login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "email of user",
+            "example": "john@doe.com",
+            "format": "email",
+            "pattern": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"
+          },
+          "password": {
+            "type": "string",
+            "description": "password of user",
+            "example": "password",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "stayConnected": {
+            "type": "boolean",
+            "description": "USer want to stay connected, if yes refresh token is sending back",
+            "example": true
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "stayConnected"
+        ]
+      },
+      "input.barometer": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The barometer type",
+            "example": "happiness",
+            "pattern": "^\\w+$"
+          },
+          "score": {
+            "type": "integer",
+            "description": "score of the barometer",
+            "example": 50,
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "type",
+          "score"
+        ]
+      },
+      "input.quiz": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "name of the quiz",
+            "example": "quiz label"
+          },
+          "description": {
+            "type": "string",
+            "description": "description of the quiz",
+            "example": "this is a description"
+          },
+          "workCategories": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "description": "Work category identifier",
+              "minimum": 1
+            }
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/input.quiz.question"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "workCategories",
+          "questions"
+        ]
+      },
+      "input.quiz.question": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "description of the new quiz question",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "questionType": {
+            "type": "string",
+            "enum": [
+              "text",
+              "single",
+              "multiple"
+            ],
+            "example": "multiple"
+          },
+          "choices": {
+            "description": "Provide choices if question type in not type text. Choices are displayed to the user. At least two values are required.",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "The available question choice",
+              "example": "choice1"
+            }
+          }
+        },
+        "required": [
+          "description",
+          "questionType"
+        ]
+      },
+      "input.updateUser": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "firstName of user",
+            "example": "john"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "lastName of user",
+            "example": "doe"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "the user phone number"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "the user city zip code"
+          },
+          "address": {
+            "type": "string",
+            "description": "the user address"
+          },
+          "city": {
+            "type": "string",
+            "description": "the user city name"
+          },
+          "workCategoryId": {
+            "type": "integer",
+            "description": "The work category of user"
+          }
+        }
+      },
+      "input.quiz.response": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "type": "integer",
+            "description": "id of the question",
+            "example": 1
+          },
+          "choices": {
+            "type": "array",
+            "description": "the answers chosen by the user. if the question is a multiple or single type",
+            "items": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          "value": {
+            "type": "string",
+            "description": "the answers chosen by the user. if the question is a text type",
+            "example": "This is a response example"
+          }
+        },
+        "required": [
+          "questionId"
+        ]
+      },
+      "input.quiz.responses": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/input.quiz.response"
+        }
+      },
+      "output.message": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "details"
+          }
+        },
+        "required": [
+          "message"
+        ]
+      },
+      "output.login.success": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Access token with short duration validity",
+            "format": "jwt"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token with long duration validity to renew the access token when expired",
+            "format": "jwt"
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "output.me": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "The user account id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "firstName of user",
+            "example": "john"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "lastName of user",
+            "example": "doe"
+          },
+          "email": {
+            "type": "string",
+            "description": "email of user",
+            "example": "john@doe.com",
+            "format": "email"
+          },
+          "role": {
+            "type": "string",
+            "description": "the user role",
+            "example": "member",
+            "enum": [
+              "admin",
+              "member"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "description": "the account status",
+            "example": "active",
+            "enum": [
+              "active",
+              "revoke"
+            ]
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "the user phone number"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "the user city zip code"
+          },
+          "address": {
+            "type": "string",
+            "description": "the user address"
+          },
+          "city": {
+            "type": "string",
+            "description": "the user city name"
+          },
+          "workCategoryId": {
+            "type": "integer",
+            "description": "The user work category",
+            "example": 1
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "firstName",
+          "lastName",
+          "email",
+          "role",
+          "status",
+          "phoneNumber",
+          "zipCode",
+          "address",
+          "city"
+        ]
+      },
+      "output.barometers": {
+        "type": "array",
+        "description": "Barometers list",
+        "items": {
+          "$ref": "#/components/schemas/output.barometer"
+        }
+      },
+      "output.barometer": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The barometer type",
+            "example": "happiness"
+          },
+          "score": {
+            "type": "integer",
+            "description": "Barometer score value",
+            "example": 50,
+            "minimum": 1,
+            "maximum": 100
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2022-01-01",
+            "description": "The barometer date"
+          }
+        },
+        "required": [
+          "type",
+          "score"
+        ]
+      },
+      "output.barometer.stats": {
+        "$ref": "#/components/schemas/output.barometer.stats.content"
+      },
+      "output.barometer.stats.content": {
+        "type": "array",
+        "items": {
+          "required": [
+            "score",
+            "type",
+            "year",
+            "entries"
+          ],
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "number",
+              "description": "The average score value for the requested period",
+              "example": 10
+            },
+            "type": {
+              "type": "string",
+              "example": "foo",
+              "description": "The barometer name (it's type)"
+            },
+            "workCategoryId": {
+              "type": "integer",
+              "example": 1,
+              "description": "The associated work category of user."
+            },
+            "year": {
+              "type": "integer",
+              "example": 2022,
+              "description": "Year of the stat range (maximal range)."
+            },
+            "month": {
+              "type": "integer",
+              "example": 5,
+              "description": "Month of the stat range, optional."
+            },
+            "day": {
+              "type": "integer",
+              "example": 12,
+              "description": "The day of the stat range (mininal range)"
+            },
+            "entries": {
+              "type": "integer",
+              "example": 500,
+              "description": "Number of barometers filled for this period and scope"
+            }
+          }
+        }
+      },
+      "output.notifications": {
+        "type": "array",
+        "description": "Notifications list",
+        "items": {
+          "$ref": "#/components/schemas/output.notification"
+        }
+      },
+      "output.notification": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "The user account id"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "read": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "New notification",
+            "nullable": false
+          },
+          "level": {
+            "type": "integer",
+            "description": "The notification priority level.",
+            "minimum": 1,
+            "maximum": 3
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "read",
+          "message",
+          "level"
+        ]
+      },
+      "output.refresh.success": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "Access token with short duration validity",
+            "format": "jwt"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Refresh token with long duration validity",
+            "format": "jwt"
+          }
+        },
+        "required": [
+          "accessToken",
+          "refreshToken"
+        ]
+      },
+      "output.quizzes": {
+        "type": "array",
+        "description": "Quizzes list",
+        "items": {
+          "$ref": "#/components/schemas/output.quiz"
+        }
+      },
+      "output.quizzes.light": {
+        "type": "array",
+        "description": "Quizzes list",
+        "items": {
+          "$ref": "#/components/schemas/output.quiz.light"
+        }
+      },
+      "output.quizzes.stats": {
+        "type": "object",
+        "properties": {
+          "openQuiz": {
+            "type": "integer",
+            "example": 15,
+            "description": "Number of open quizzes"
+          },
+          "avgQuestionsQuiz": {
+            "type": "integer",
+            "example": 12,
+            "description": "Average number of questions per quiz"
+          },
+          "quizzes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/output.quiz.stats"
+            }
+          },
+          "quizCreatedByYear": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "number",
+                "year"
+              ],
+              "properties": {
+                "year": {
+                  "type": "integer",
+                  "description": "The year of counter",
+                  "example": 2023
+                },
+                "number": {
+                  "type": "integer",
+                  "description": "The number of quiz created",
+                  "example": 15
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "avgQuestionsQuiz",
+          "openQuiz",
+          "quizCreatedByYear",
+          "quizzes"
+        ]
+      },
+      "output.quiz.stats": {
+        "type": "object",
+        "properties": {
+          "quizId": {
+            "type": "integer",
+            "description": "The quiz identifier",
+            "example": 1
+          },
+          "peopleResponded": {
+            "type": "integer",
+            "example": 10,
+            "description": "The number of people was has responded to this quiz",
+            "nullable": false
+          },
+          "peopleConcerned": {
+            "type": "integer",
+            "example": 25,
+            "description": "The number of people concerned by the quiz work categories"
+          },
+          "numberOfQuestions": {
+            "type": "integer",
+            "example": 3,
+            "description": "The total number of questions in the quiz"
+          }
+        },
+        "required": [
+          "peopleResponded",
+          "peopleConcerned",
+          "numberOfQuestions",
+          "quizId"
+        ]
+      },
+      "output.quiz": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "Quiz identifier"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "name of the quiz",
+            "example": "quiz label"
+          },
+          "description": {
+            "type": "string",
+            "description": "description of the quiz",
+            "example": "this is a description"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published",
+              "closed"
+            ],
+            "default": "draft",
+            "description": "status of a quiz"
+          },
+          "workCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/output.work.category"
+            }
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/output.question"
+            }
+          },
+          "creatorId": {
+            "type": "integer",
+            "description": "The quiz user creator",
+            "example": 1
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "name",
+          "description",
+          "status",
+          "workCategories",
+          "questions",
+          "creatorId"
+        ]
+      },
+      "output.quiz.light": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "Quiz identifier"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "name of the quiz",
+            "example": "quiz label"
+          },
+          "description": {
+            "type": "string",
+            "description": "description of the quiz",
+            "example": "this is a description"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "closedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "published",
+              "closed"
+            ],
+            "default": "draft",
+            "description": "status of a quiz"
+          },
+          "workCategories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/output.work.category"
+            }
+          },
+          "creatorId": {
+            "type": "integer",
+            "description": "The quiz user creator",
+            "example": 1
+          },
+          "responded": {
+            "type": "boolean",
+            "example": false,
+            "description": "Indicates if the connected user has responded to the quiz with at least one response."
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "name",
+          "description",
+          "startedAt",
+          "closedAt",
+          "status",
+          "workCategories",
+          "creatorId",
+          "responded"
+        ]
+      },
+      "output.question": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "Question identifier"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "description": "description of a question"
+          },
+          "responses": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/output.response"
+            }
+          },
+          "questionType": {
+            "type": "string",
+            "enum": [
+              "text",
+              "single",
+              "multiple"
+            ],
+            "example": "single"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "The choice id",
+                  "example": 1
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "value": {
+                  "type": "string",
+                  "example": "choice1"
+                },
+                "type": {
+                  "type": "string",
+                  "example": "single",
+                  "enum": [
+                    "single",
+                    "multiple"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "description",
+          "questionType"
+        ]
+      },
+      "output.work.categories": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/output.work.category"
+        }
+      },
+      "output.work.category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "Work category identifier"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "name": {
+            "type": "string",
+            "description": "description of a question"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "name"
+        ]
+      },
+      "output.response": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1,
+            "description": "Response identifier"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "integer",
+            "description": "The user id linked to the response",
+            "example": 1
+          },
+          "questionId": {
+            "type": "integer",
+            "description": "The question id linked to the response",
+            "example": 1
+          },
+          "responseChoiceId": {
+            "type": "integer",
+            "description": "The response choice in the case of response is type single or multiple",
+            "example": 1
+          },
+          "value": {
+            "type": "string",
+            "description": "Response value if response if free text input",
+            "example": "response type text"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "userId",
+          "questionId"
+        ]
+      },
+      "output.responses": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/output.response"
+        }
+      }
+    }
+  }
+}

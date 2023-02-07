@@ -1,0 +1,7 @@
+log:
+  level: WARN # INFO DEBUG WARN DEBUG
+
+jwt:
+  secret: secret
+  refreshTokenMaxAge: 7776000 # 60*60*24*90
+  accessTokenMaxAge: 900 # 15*60
